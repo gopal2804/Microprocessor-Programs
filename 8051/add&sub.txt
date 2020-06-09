@@ -1,0 +1,19 @@
+org 00h
+mov a,#22h
+mov b,#23h
+add a,b
+mov 70h,a
+mov a,#01h
+mov b,#01h
+addc a,b
+mov 71h,a
+clr c
+mov a,#02h
+mov b,#01h
+subb a,b
+mov 72h,a
+mov a,#01h
+mov b,#01h
+subb a,b
+mov 73h,a
+end

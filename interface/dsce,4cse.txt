@@ -1,0 +1,61 @@
+.model small
+.data
+pa equ 0d800h
+pb equ 0d801h
+pc equ 0d802h
+cw equ 0d803h
+m1 db 86h,0c6h,92h,0a1h
+m2 db 86h,92h,0c6h,99h
+.code
+mov ax,@data
+mov ds,ax
+mov al,80h
+mov dx,cw
+out dx,al
+mov bh,10h
+l1:
+lea si,m1
+call display
+call delay
+lea si,m2
+call display
+call delay
+dec bh
+jnz l1
+mov ah,4ch
+int 21h
+
+display proc near
+mov cx,04h
+l3:mov bl,08h
+mov al,[si]
+l2:rol al,01h
+mov dx,pb
+out dx,al
+mov ah,00h
+push ax
+mov al,00h
+mov dx,pc
+out dx,al
+mov al,01h
+mov dx,pc
+out dx,al
+pop ax
+dec bl
+jnz l2
+inc si 
+loop l3
+ret 
+display endp
+
+delay proc near
+mov si,0ffffh
+l5:mov di,0ffffh
+l4:dec di 
+jnz l4
+dec si
+jnz l5
+ret
+delay endp
+end
+ 

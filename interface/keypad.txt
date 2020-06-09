@@ -1,0 +1,97 @@
+.model small
+.data
+pa equ 0d800h
+pb equ 0d801h
+pc equ 0d802h
+cw equ 0d803h
+keys db '0123456789ABCDEFGHIJKLM'
+row db ?
+col db ?
+m1 db 10,13,"the key is $"
+m2 db 10,13,"the row no is $"
+m3 db 10,13,"the col no is $"
+.code
+mov ax,@data
+mov ds,ax
+mov al,90h
+mov dx,cw
+out dx,al
+
+repe:mov al,01h
+mov dx,pc
+out dx,al
+mov dx,pa
+in al,dx
+cmp al,00h
+jnz fr
+
+mov al,02h
+mov dx,pc
+out dx,al
+mov dx,pa
+in al,dx
+cmp al,00h
+jnz sr
+
+mov al,04h
+mov dx,pc
+out dx,al
+mov dx,pa
+in al,dx
+cmp al,00h
+jnz tr
+jmp repe
+
+fr:
+lea si,keys
+mov row,31h
+mov col,31h
+l1:shr al,01h
+jc display
+inc si
+inc col
+jmp l1
+
+sr:
+lea si,keys+8d
+mov row,32h
+mov col,31h
+l2:shr al,01h
+jc display
+inc si
+inc col
+jmp l2
+
+tr:
+lea si,keys+16d
+mov row,33h
+mov col,31h
+l3:shr al,01h
+jc display
+inc si
+inc col
+jmp l3
+
+display:
+lea dx,m1
+mov ah,09h
+int 21h
+mov dl,[si]
+mov ah,02h
+int 21h
+lea dx,m2 
+mov ah,09h
+int 21h
+mov dl,row
+mov ah,02h
+int 21h
+lea dx,m3
+mov ah,09h
+int 21h
+mov dl,col
+mov ah,02h
+int 21h
+
+mov ah,4ch
+int 21h
+end

@@ -1,0 +1,19 @@
+org 00h
+	mov a,#00h
+	l1:acall delay
+	inc a
+	cjne a,#0ffh,l1
+	l2:acall delay
+	dec a
+	cjne a,#00h,l2
+org 70h
+	delay:
+ 	mov r0,#0ffh
+	l5:mov r1,#0ffh
+	l4:mov r2,#0ffh
+	l3:djnz r2,l3
+	   djnz r1,l4
+	   djnz r0,l5
+	   ret
+end	   
+	

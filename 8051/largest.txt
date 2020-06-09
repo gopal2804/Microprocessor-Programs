@@ -1,0 +1,46 @@
+org 00h
+	mov dptr,#4000h
+	mov a,#23h
+	movx @dptr,a
+	inc dptr
+	mov a,#22h
+	movx @dptr,a
+	inc dptr
+	mov a,#34h
+	movx @dptr,a
+	inc dptr 
+	mov a,#11h
+	movx @dptr,a
+	inc dptr 
+	mov a,#0f1h
+	movx @dptr,a
+	mov dptr,#4000h
+	mov r0,#04h
+	movx a,@dptr
+	mov b,a
+	inc dptr
+	movx a,@dptr
+	xch a,b
+	l2:clr c
+	subb a,b
+	jc l1
+	inc dptr
+	mov r1,a
+	movx a,@dptr
+	mov b,a
+	mov a,r1
+	djnz r0,l2
+	sjmp exit
+	l1:
+	xch a,b
+	inc dptr
+	mov r2,a
+	movx a,@dptr
+	mov b,a
+	mov a,r2
+	djnz r0,l2
+	exit: mov dptr,#4062h
+	movx @dptr,a
+	end
+	
+	

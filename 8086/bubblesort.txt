@@ -1,0 +1,73 @@
+.model small
+.data
+a db 40h,50h,30h,20h,10h
+len dw $-a
+m3 db 10,13,"enter the key $"
+m1 db 10,13,"key is found $"
+m2 db 10,13,"key not found $"
+key db ?
+.code
+mov ax,@data
+mov ds,ax
+
+lea dx,m3
+mov ah,09h
+int 21h
+
+mov ah,01h
+int 21h
+sub al,30h
+mov bl,al
+mov al,01h
+int 21h
+sub al,30h
+mov ah,bl
+aad
+ 
+mov key,al
+mov bx,len
+dec bx
+n2:
+	mov cx,bx
+	lea si,a
+n1:	
+	mov al,[si]
+	inc si
+	cmp al,[si]
+	jbe noswap
+	xchg al,[si]
+	mov [si-1],al
+noswap:loop n1
+dec bx
+jnz n2
+lea si,a
+mov di,si
+add di,len
+dec di
+l1:
+cmp si,di
+ja nf
+mov bx,si
+add bx,di
+shr bx,01h
+mov al,key
+cmp al,[bx]
+jz f
+ja nl
+mov di,bx
+dec di
+jmp l1
+nl:
+mov si,bx
+inc si
+jmp l1
+f:
+lea dx,m1
+jmp exit
+nf:
+lea dx,m2
+exit:mov ah,09h
+int 21h
+mov ah,4ch
+int 21h
+end

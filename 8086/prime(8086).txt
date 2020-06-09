@@ -1,0 +1,51 @@
+.model small
+.data
+m1 db 10,13,"enter 8bit number$"
+m2 db 10,13,"prime $"
+m3 db 10,13,"not prime $"
+n db ?
+.code
+mov ax,@data
+mov ds,ax
+lea dx,m1
+mov ah,09h
+int 21h
+call read8
+mov n,al
+mov bl,01h
+mov bh,00h
+mov cl,n
+mov ch,00h
+l2:mov al,n
+mov ah,00h
+div bl
+cmp ah,00h
+jnz l1
+inc bh
+l1:inc bl
+loop l2
+cmp bh,02h
+je l3
+lea dx,m3
+mov ah,09h
+int 21h
+jmp exit
+l3:lea dx,m2
+mov ah,09h
+int 21h
+exit:
+mov ah,4ch
+int 21h
+read8 proc near
+mov ah,01h
+int 21h
+sub al,30h
+mov bl,al
+mov ah,01h
+int 21h
+sub al,30h
+mov ah,bl
+aad
+ret
+read8 endp
+end

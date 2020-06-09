@@ -1,0 +1,78 @@
+.model small
+.data
+pa equ 0d800h
+pb equ 0d801h
+pc equ 0d802h
+cw equ 0d803h
+table db 0c0h,0f9h,0a4h,0b0h,099h,092h,082h,0f8h,080h,090h
+hour db ?
+min db ?
+sec db ?
+ms db ?
+.code
+mov ax,@data
+mov ds,ax
+mov al,80h
+mov dx,cw
+out dx,al
+mov ah,2ch
+int 21h
+mov hour,ch
+mov min,cl
+mov sec,dh
+mov ms,dl
+
+mov al,min
+call unpack
+mov al,hour
+call unpack
+call delay
+
+mov al,ms
+call unpack
+mov al,sec 
+call unpack
+
+mov ah,4ch
+int 21h
+
+unpack proc near
+aam 
+call display
+mov al,ah
+call display
+ret
+unpack endp
+
+display proc near
+mov bl,08h
+lea bx,table
+xlat
+l1:rol al,01h
+mov dx,pa
+out dx,al
+push ax
+mov al,00h
+mov dx,pc
+out dx,al
+mov al,01h
+out dx,al
+pop ax
+dec bl
+jnz l1
+ret
+display endp
+
+delay proc near
+mov si,0ffffh
+l2:mov di,0ffffh
+l3:dec di 
+jnz l3
+dec si
+jnz l2
+pop si
+ret
+delay endp
+end
+ 
+

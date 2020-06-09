@@ -1,0 +1,89 @@
+.model small
+.data
+pa equ 0d800h
+pb equ 0d801h
+pc equ 0d802h
+cw equ 0d803h
+table db 0c0h,0f9h,0a4h,0b0h,099h,092h,082h,0f8h,080h,090h
+m1 db 0ffh,0ffh,0ffh,0ffh,?,?,?,?,?,0ffh,0ffh,0ffh,0ffh
+value dw 0ffffh
+.code
+mov ax,@data
+mov ds,ax
+mov al,80h
+mov dx,cw
+out dx,al
+mov ax,value
+mov bx,0ah
+mov cx,00h
+l1:mov dx,00h
+div bx
+push dx
+inc cx
+cmp ax,00h
+jnz l1
+lea si,m1
+add si,08h
+l2:lea bx,table
+pop ax
+xlat
+mov [si],al
+dec si
+loop l2
+mov cx,0ah
+lea si,m1
+l3:push si
+call display
+call delay
+pop si
+inc si
+loop l3
+dec si
+mov cx,09h
+l4:push si
+call display
+call delay
+pop si
+dec si 
+loop l4
+mov ah,4ch
+int 21h
+
+display proc near
+mov cx,04h
+l5:mov bl,08h
+mov al,[si]
+l6:rol al,01h
+mov dx,pb
+out dx,al
+push ax
+mov al,00h
+mov dx,pc
+out dx,al
+mov al,01h
+mov dx,pc
+out dx,al
+pop ax
+dec bl
+jnz l6
+inc si 
+loop l5
+ret 
+display endp
+
+
+delay proc near
+push si
+mov si,0ffffh
+l7:mov di,0ffffh
+l8:dec di 
+jnz l8
+dec si
+jnz l7
+pop si
+ret
+delay endp
+end
+ 
+
+

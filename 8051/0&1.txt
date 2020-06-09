@@ -1,0 +1,14 @@
+org 00h
+	mov a,#0fch
+	mov r0,#00h
+	mov r1,#00h
+	mov r3,#08h
+	l2:rrc a
+	jc l1
+	inc r0
+	djnz r3,l2
+	sjmp exit
+	l1:inc r1
+	djnz r3,l2
+	exit:
+	end

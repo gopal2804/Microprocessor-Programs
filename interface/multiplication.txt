@@ -1,0 +1,49 @@
+.model small
+printf macro msg
+lea dx,msg
+mov ah,09h
+int 21h
+endm
+.data
+pa equ 0d800h
+pb equ 0d801h
+pc equ 0d802h
+cw equ 0d803h
+m1 db 10,13,"enter first 8 bit no $"
+m2 db 10,13,"enter second 8 bit no $"
+.code
+mov ax,@data
+mov ds,ax
+mov al,82h
+mov dx,cw
+out dx,al
+printf m1
+mov ah,08h
+int 21h
+mov dx,pb
+in al,dx
+mov bl,al
+printf m2
+mov ah,08h
+int 21h
+mov dx,pb
+in al,dx
+mul bl
+mov dx,pa
+out dx,al
+call delay
+mov al,ah
+mov dx,pa
+out dx,al
+mov ah,4ch
+int 21h
+delay proc near
+mov si,0ffffh
+l2:mov di,0ffffh
+l1:dec di
+jnz l1
+dec si
+jnz l2
+ret
+delay endp
+end

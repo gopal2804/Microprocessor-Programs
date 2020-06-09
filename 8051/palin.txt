@@ -1,0 +1,25 @@
+org 00h
+	mov r0,#22d
+	mov a,r0
+
+	mov b,#00h
+	mov r1,#08h
+	loop:
+	rrc a
+	mov r2,a
+	mov a,b
+	rlc a
+	mov b,a
+	mov a,r2
+	djnz r1,loop
+	mov a,r0
+	subb a,b
+	jz pali
+	mov a,#00h
+	sjmp exit
+	pali:
+	mov a,#0ffh
+	exit:
+	end
+	
+	
